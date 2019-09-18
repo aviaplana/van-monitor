@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/albert/.platformio/penv/bin:/Users/albert/.platformio/penv:/opt/local/bin:/opt/local/sbin:/Users/albert/.cargo/bin:/anaconda3/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/albert/apache-maven/bin:~/flutter/bin",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}
