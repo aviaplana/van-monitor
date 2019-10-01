@@ -16,11 +16,11 @@ int LevelSensor::getLevel() {
   }
 
 int LevelSensor::calculateExponential(double value) {
-    if (value > 830) {
-         value = 830.0;
+    if (value > max_sensor_value) {
+         value = max_sensor_value;
     }
   
-    double a = 330.0;   //Sensor value in position = 0
+    double a = min_sensor_value; 
     double b = 0.08497663879;
 
     return log10(value / a) / (b * log10(M_E)); //Exponential growth

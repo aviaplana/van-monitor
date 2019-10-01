@@ -10,6 +10,8 @@ class LevelSensor {
     private:
         int pin;
         int calculateExponential(double);
+        const float max_sensor_value = 830.0;
+        const float min_sensor_value = 330.0;
 };
 
 #endif

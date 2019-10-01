@@ -36,19 +36,6 @@ void Display::display() {
     oled_display.display();
 }
 
-void Display::printFreshLevel(int level) {
-  oled_display.setTextSize(2);
-  oled_display.setCursor(0, 0);
-  oled_display.print("FRESH TANK");
-  printLevel(level);
-}
-
-void Display::printGrayLevel(int level) {
-  oled_display.setTextSize(2);
-  oled_display.setCursor(0, 0);
-  oled_display.print("GRAY TANK");
-  printLevel(level);
-}
 
 void Display::printWeather(float temperature, float humidity, int x) {
   int text_x = x + ICON_SIZE + 2;

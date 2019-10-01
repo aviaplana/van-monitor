@@ -14,3 +14,14 @@ float WeatherSensor::getTemperature() {
     return 30.4;
     //return sensor.getTemperature();
 }
+
+bool WeatherSensor::isFreezing() {
+    return getTemperatire() <= 0;
+}
+
+weather_t WeatherSensor::getWeather() {
+    float temperature = getTemperature();
+    float humidity = getHumidity();
+
+    return weather_t{temperature, humidity}
+}
