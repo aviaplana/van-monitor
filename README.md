@@ -1,2 +1,2 @@
 # Van monitor
-The aim of this project is to monitor the water tanks of my camper van, as well as the indoor and outdoor weather conditions.
+The aim of this project is to monitor both gray and fresh water tanks, as well as the weather conditions inside and outside of the van.
