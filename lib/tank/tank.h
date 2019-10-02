@@ -6,7 +6,7 @@ enum class TankStatus {
     OK,
     ALMOST_EMPTY,
     EMPTY
-}
+};
 
 class Tank {
     public:

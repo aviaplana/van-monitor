@@ -6,22 +6,20 @@ void WeatherSensor::begin() {
 }
 
 float WeatherSensor::getHumidity() {
-    return 66.4;
-    //return sensor.getHumidity();
+    return sensor.getHumidity();
 }
 
 float WeatherSensor::getTemperature() {
-    return 30.4;
-    //return sensor.getTemperature();
+    return sensor.getTemperature();
 }
 
 bool WeatherSensor::isFreezing() {
-    return getTemperatire() <= 0;
+    return getTemperature() <= 0;
 }
 
 weather_t WeatherSensor::getWeather() {
     float temperature = getTemperature();
     float humidity = getHumidity();
 
-    return weather_t{temperature, humidity}
+    return weather_t{temperature, humidity};
 }

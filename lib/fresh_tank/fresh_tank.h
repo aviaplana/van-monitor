@@ -5,7 +5,7 @@
 
 class FreshTank: public Tank {
     public:
-        FreshTank(int);
+        FreshTank(int _pin): sensor(_pin) {};
         int getLevel();
 
     private:

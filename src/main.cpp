@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "display.h"
 #include <gray_tank.h>
 #include <fresh_tank.h>
 #include <ui.h>
@@ -26,9 +27,8 @@ WeatherSensor external_weather;
 GrayTank gray_tank = GrayTank(4, listSwitches);
 FreshTank fresh_tank {PIN_FRESH_LEVEL};
 ButtonInterrupt button_select {PIN_BUTTON_SELECT};
-
 Display display = Display(128, 64);
-Ui ui;
+Ui ui { &display };
 
 unsigned long last_refresh = 0;
 
@@ -43,9 +43,13 @@ void initializeInterruptions() {
 
 void setup() {
   Serial.begin(9600);
-
+  
+  initializeInterruptions();
+  
+  internal_weather.begin();
+  external_weather.begin();
+  ui.begin();
   gray_tank.begin();
-  display.begin();
 }
 
 void printGrayTank() {
@@ -69,11 +73,11 @@ bool hasWarnings() {
 
 void printWarnings() {
   TankStatus gray_status = gray_tank.getStatus();
-  TankStatus fresh_tank = fresh_tank.getStatus();
+  TankStatus fresh_status = fresh_tank.getStatus();
   bool ext_freezing = external_weather.isFreezing();
   bool int_freezing = internal_weather.isFreezing();
 
-  ui.printWarning(gray_tank, fresh_tank, int_freezing, ext_freezing);
+  ui.printWarnings(gray_status, fresh_status, int_freezing, ext_freezing);
 }
 
 void printWeather() {
