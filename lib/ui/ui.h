@@ -33,7 +33,7 @@ enum class Screen {
 
 class Ui {
     public: 
-        Ui(Display* _display);
+        Ui(Display& _display);
         void begin();
         void printIdle();
         void printGrayTank(int level);
@@ -50,8 +50,8 @@ class Ui {
         Screen getCurrentScreen() { return current_screen; };
 
     private:
-        Display* display;
-        Screen current_screen;
+        Display& display;
+        Screen current_screen = Screen::WEATHER;
         void printLevel(int level);
         void printWeatherTemplate();
         void printZoneTemperature(weather_t* zone, int x);

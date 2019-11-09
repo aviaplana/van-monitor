@@ -8,6 +8,7 @@ class GrayTank: public Tank {
         GrayTank(int, TankFloaterSwitch*);
         void begin();
         int getLevel();
+        bool hasWarning();
     
     private: 
         TankFloaterSwitch* switches;

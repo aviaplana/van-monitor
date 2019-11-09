@@ -15,9 +15,9 @@ void ButtonInterrupt::begin() {
 }   
 
 void ButtonInterrupt::interruptionRoutine() {
-    if (millis() > 1000 && millis() - last_interruption >= interruption_interval) {
-        last_interruption = millis();
+    if ((millis() > 1000) && (millis() - last_interruption) >= interruption_interval) {
         interruption_flag = true;
+        last_interruption = millis();
     }
 }
 

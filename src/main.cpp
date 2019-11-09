@@ -3,10 +3,12 @@
 #include <gray_tank.h>
 #include <fresh_tank.h>
 #include <ui.h>
-#include <weather_sensor.h>
+#include <internal_weather_sensor.h>
+#include <external_weather_sensor.h>
 #include <button_interrupt.h>
 
-#define REFRESH_RATE 100
+#define REFRESH_RATE 300
+#define TIME_TO_IDLE 15000
 
 #define PIN_FRESH_LEVEL A0
 #define PIN_BUTTON_SELECT 2
@@ -14,6 +16,8 @@
 #define PIN_FLOAT_SWITCH_2 5
 #define PIN_FLOAT_SWITCH_3 6
 #define PIN_FLOAT_SWITCH_4 7
+#define PIN_INTERNAL_WEATHER_SENSOR 8
+#define PIN_LED 10
 
 TankFloaterSwitch listSwitches[] {
   { FloaterSwitch(PIN_FLOAT_SWITCH_1), 25 }, 
@@ -22,13 +26,13 @@ TankFloaterSwitch listSwitches[] {
   { FloaterSwitch(PIN_FLOAT_SWITCH_4), 100 }
 };
 
-WeatherSensor internal_weather;
-WeatherSensor external_weather;
+InternalWeatherSensor internal_weather(PIN_INTERNAL_WEATHER_SENSOR);
+ExternalWeatherSensor external_weather;
 GrayTank gray_tank = GrayTank(4, listSwitches);
 FreshTank fresh_tank {PIN_FRESH_LEVEL};
 ButtonInterrupt button_select {PIN_BUTTON_SELECT};
-Display display = Display(128, 64);
-Ui ui { &display };
+Display display{128, 64};
+Ui ui { display };
 
 unsigned long last_refresh = 0;
 
@@ -41,11 +45,16 @@ void initializeInterruptions() {
   attachInterrupt(digitalPinToInterrupt(button_select.getPin()), interruptionRoutineSelect, FALLING);
 }
 
+void initializeLed() {
+  pinMode(PIN_LED, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
+}
+
 void setup() {
   Serial.begin(9600);
   
   initializeInterruptions();
-  
+  initializeLed();
   internal_weather.begin();
   external_weather.begin();
   ui.begin();
@@ -72,8 +81,8 @@ bool hasWarnings() {
 }
 
 void printWarnings() {
-  TankStatus gray_status = gray_tank.getStatus();
-  TankStatus fresh_status = fresh_tank.getStatus();
+  TankStatus gray_status = gray_tank.getCurrentStatus();
+  TankStatus fresh_status = fresh_tank.getCurrentStatus();
   bool ext_freezing = external_weather.isFreezing();
   bool int_freezing = internal_weather.isFreezing();
 
@@ -98,9 +107,12 @@ void refreshCurrentScreen() {
       break;
 
       case Screen::WARNING:
+      Serial.println("Warning");
         if (hasWarnings()) {
-          printWeather();
+          Serial.println("has Warnings");
+          printWarnings();
         } else {
+          Serial.println("no Warnings");
           ui.showIdle();
         }
       break;
@@ -110,9 +122,7 @@ void refreshCurrentScreen() {
       break;
 
       case Screen::IDLE:
-        if (hasWarnings()) {
-          ui.showWarnings();
-        }
+        ui.printIdle();
       break;
     }
 }
@@ -126,11 +136,27 @@ void refreshCurrentScreenIfNeeded() {
 
 void changeScreenIfButtonPressed() {
   if (button_select.hasInterruption()) {
+    button_select.clearInterruption();
     ui.nextScreen();
   }
 }
 
+void showIdleIfNoInteraction() {
+  if ((millis() - button_select.getLastInterruption()) > TIME_TO_IDLE) {
+    ui.showIdle();
+  }
+}
+
+void turnOnLedIfFreshTankFull() {
+  TankStatus fresh_status = fresh_tank.getCurrentStatus();
+  int led_status = (fresh_status == TankStatus::FULL) ? HIGH : LOW;
+  
+  digitalWrite(PIN_LED, led_status);
+}
+
 void loop() {
   changeScreenIfButtonPressed();
-  refreshCurrentScreen();
+  refreshCurrentScreenIfNeeded();
+  showIdleIfNoInteraction();
+  turnOnLedIfFreshTankFull();
 }

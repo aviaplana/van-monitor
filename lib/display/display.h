@@ -5,13 +5,9 @@
 
 class Display: public Adafruit_SSD1306 {
     public:
-        Display(int width, int height);
+        Display(int width, int height):  Adafruit_SSD1306(width, height, &Wire) { };
         void begin();
-        void clear();
-        void displayBuffer();
-    
-    private:
-        Adafruit_SSD1306 display;
+        void clear();   
 };
 
 #endif

@@ -6,7 +6,7 @@ FloaterSwitch::FloaterSwitch(int _pin) {
 }
 
 void FloaterSwitch::begin() {
-    pinMode(pin, INPUT);
+    pinMode(pin, INPUT_PULLUP);
 }
 
 bool FloaterSwitch::state() {

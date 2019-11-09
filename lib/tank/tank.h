@@ -3,6 +3,7 @@
 
 enum class TankStatus {
     FULL,
+    ALMOST_FULL,
     OK,
     ALMOST_EMPTY,
     EMPTY
@@ -11,16 +12,13 @@ enum class TankStatus {
 class Tank {
     public:
         virtual int getLevel() = 0;
+        virtual bool hasWarning() = 0;
 
         TankStatus getStatus() { return status; };
 
         TankStatus getCurrentStatus() {
             updateStatus();
             return getStatus();
-        }
-
-        bool hasWarning() {
-            return status == TankStatus::ALMOST_EMPTY || status == TankStatus::EMPTY;
         }
 
         void updateStatus() {
@@ -37,7 +35,7 @@ class Tank {
             }
         }
 
-    private:
+    protected:
         TankStatus status;
 };
 

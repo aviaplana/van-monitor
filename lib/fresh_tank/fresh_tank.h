@@ -7,6 +7,7 @@ class FreshTank: public Tank {
     public:
         FreshTank(int _pin): sensor(_pin) {};
         int getLevel();
+        bool hasWarning();
 
     private:
         LevelSensor sensor;

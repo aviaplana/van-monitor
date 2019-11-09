@@ -1,19 +1,23 @@
 #ifndef WEATHER_SENSOR_H
 #define WEATHER_SENSOR_H
-#include "Wire.h"
-#include "SHTSensor.h"
 #include "weather.h"
 
 class WeatherSensor {
     public:
-        void begin();
-        float getTemperature();
-        float getHumidity();
-        weather_t getWeather();
-        bool isFreezing();
+        virtual void begin() = 0;
+        virtual float getTemperature() = 0;
+        virtual float getHumidity() = 0;
+        
+        bool isFreezing() {
+            return getTemperature() <= 0;
+        }
 
-    private:
-        SHTSensor sensor;
+        weather_t getWeather() {
+            float temperature = getTemperature();
+            float humidity = getHumidity();
+
+            return weather_t{temperature, humidity};
+        }
 };
 
 #endif
